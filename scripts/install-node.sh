@@ -304,7 +304,7 @@ if [ "$_masternode" == "1" ]; then
  
   # Update sentinel config
   sed -i 's/#stash_conf/stash_conf/g' sentinel.conf 
-  sed -i 's/username/$_daemon_user/g' sentinel.conf
+  sed -i "s/username/$_daemon_user/g" sentinel.conf
  
   if [ "$_testnet" == "1" ]; then
     sed -i 's/network=mainnet/#network=mainnet/g' sentinel.conf 
