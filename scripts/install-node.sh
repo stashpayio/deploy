@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Install Stashcore node on Ubuntu 18.04 LTS x64
 
-# Usage 
+# Usage
 # ./install.sh [masternode] [testnet] [debug]
 
-# Examples 
+# Examples
 
 #./install.sh
 #./install.sh testnet
@@ -68,33 +68,33 @@ fi
 # Check OS Version is Ubuntu 18.04
 . /etc/lsb-release
 
-if [ "$DISTRIB_RELEASE" != "18.04" ] && 
+if [ "$DISTRIB_RELEASE" != "18.04" ] &&
    [ "$DISTRIB_RELEASE" != "18.10" ]; then
   echo "WARNING: This script has been designed to work with Ubuntu 18.04"
   exit 1 # Comment out to ignore warning
 fi
 
 # Initialise command line arguments
-for i in "$@"; do  
+for i in "$@"; do
 
-  if [ "$i" == "masternode" ]; then 
+  if [ "$i" == "masternode" ]; then
     _masternode="1"
   fi
 
-  if [ "$i" == "litemode" ]; then 
+  if [ "$i" == "litemode" ]; then
     _litemode="1"
   fi
 
-  if [ "$i" == "testnet" ]; then 
+  if [ "$i" == "testnet" ]; then
     _testnet="1"
     _port=$_testPort
-    _rpcPort=$_testRpcPort 
+    _rpcPort=$_testRpcPort
     _startDaemon="$_daemon -testnet"
-    _startCli="$_cli -testnet"    
+    _startCli="$_cli -testnet"
   fi
 
-  if [ "$i" == "debug" ]; then 
-    _debug="1"    
+  if [ "$i" == "debug" ]; then
+    _debug="1"
   fi
 
 done
@@ -115,27 +115,27 @@ printf  "Continue with install? (y/n) "
 
 read -t 60 REPLY
 if [ ${REPLY} != "y" ]; then
-  exit
+  exit 1
 fi
 
 # Check for previous installation
+
 if [ -d ${_configPath} ]; then
-  
   echo -n "Previous installation detected..."
   printf  "continue with overwrite? (y/n) "
   read -t 60 REPLY
   if [ ${REPLY} != "y" ]; then
-    exit             
+    exit 1
   fi
-  
-  if pgrep "${_daemon}" > /dev/null 
-  then 
+
+  if pgrep "${_daemon}" > /dev/null
+  then
     echo "Stopping ${_daemon}..."
     killall ${_daemon} > /dev/null
     sleep 3
   fi
-  
-  # cleanup config folder for backup 
+
+  # cleanup config folder for backup
 
   echo "cleaning config folders"
   rm -rf ${_configPath}/backups/
@@ -156,7 +156,7 @@ if [ -d ${_configPath} ]; then
   mkdir -p $backupDir
   tar -czvf ${backupDir}/backup_${unixTime}.tar.gz ${_configPath}
   echo "removing  ${_configPath}..."
-  rm -rf ${_configPath}      
+  rm -rf ${_configPath}
 fi
 
 adduser --disabled-password --gecos "" $_daemon_user || true
@@ -292,7 +292,7 @@ systemctl enable stashd
 
 # Install masternode
 if [ "$_masternode" == "1" ]; then
-    
+
   # Install sentinel
   sudo apt-get install -y git python-virtualenv
   sudo apt-get install -y virtualenv
@@ -301,25 +301,25 @@ if [ "$_masternode" == "1" ]; then
   pushd sentinel
   virtualenv venv
   venv/bin/pip install -r requirements.txt
- 
+
   # Update sentinel config
-  sed -i 's/#stash_conf/stash_conf/g' sentinel.conf 
+  sed -i 's/#stash_conf/stash_conf/g' sentinel.conf
   sed -i "s/username/$_daemon_user/g" sentinel.conf
- 
+
   if [ "$_testnet" == "1" ]; then
-    sed -i 's/network=mainnet/#network=mainnet/g' sentinel.conf 
-    sed -i 's/#network=testnet/network=testnet/g' sentinel.conf 
+    sed -i 's/network=mainnet/#network=mainnet/g' sentinel.conf
+    sed -i 's/#network=testnet/network=testnet/g' sentinel.conf
   fi
 
-  # Get a new privatekey  
-  _nodePrivateKey=$( ${_startCli} masternode genkey )   
+  # Get a new privatekey
+  _nodePrivateKey=$( ${_startCli} masternode genkey )
   echo "masternode=${_masternode}" >> ${_configFile}
   echo "externalip=${_nodeIpAddress}:${_port}" >> ${_configFile}
   echo "masternodeprivkey=${_nodePrivateKey}" >> ${_configFile}
-  
-  popd 
+
   popd
-  
+  popd
+
   # Create a cronjob for making sure stashd runs after reboot
   if ! crontab -l 2>/dev/null | grep "#node maintenance scripts"; then
     (crontab -l; echo "") | crontab - # work around for 'first time crontab error'
