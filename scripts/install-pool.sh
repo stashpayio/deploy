@@ -169,6 +169,11 @@ pool.on('log', function(severity, logKey, logText){
 pool.start();
 EOF
 
+# work around for 'first time crontab error'
+if ! crontab -l 2>/dev/null | grep "#some random string"; then
+  (crontab -l; echo "") | crontab - 
+fi
+
 if ! crontab -l | grep "PATH=/root/.nvm/versions/node/v10.12.0/bin:$PATH"; then
   (crontab -l; echo "PATH=/root/.nvm/versions/node/v10.12.0/bin:$PATH") | crontab -
 fi
