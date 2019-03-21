@@ -378,6 +378,7 @@ To check the block sync status type:
 
 To check masternode sync status type:
 > cli mnsync status
-
 EOF
+# restart as maternode
+systemctl restart stashd.service
 fi
