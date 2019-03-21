@@ -24,8 +24,8 @@ function boolean() {
 # Script Variables
 _host=$( cat /etc/hostname )
 _version="0.12.5.0"
-_folder="stashcore-${_version}"
-_binaries="${_folder}-x86_64-linux-gnu.tar.gz"
+_folder="stashcore-${_version}-x86_64-linux-gnu"
+_binaries="${_folder}.tar.gz"
 _gitUser="stashpayio"
 _binaryPath="https://github.com/${_gitUser}/stash/releases/download/v${_version}/${_binaries}"
 _sentinelPath="https://github.com/stashpayio/sentinel.git"
@@ -211,7 +211,7 @@ mkdir -p ${_configPath}
 mkdir -p ~/deploy/bin
 
 # Download and extract the binary files
-wget ${_binaryPath} -P ~/deploy/bin
+wget ${_binaryPath} -NP ~/deploy/bin
 tar xzf ~/deploy/bin/${_binaries} -C ~/deploy/bin
 cp ~/deploy/bin/${_folder}/bin/stashd /usr/bin
 cp ~/deploy/bin/${_folder}/bin/stash-cli /usr/bin
