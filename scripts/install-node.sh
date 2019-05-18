@@ -21,11 +21,36 @@ function boolean() {
    esac
 }
 
+if [ "$(whoami)" != "root" ]; then
+  echo "Script should be run as user: root"
+  exit 1
+fi
+
+# Check OS Version is Ubuntu
+release=$( lsb_release -cs ) || true
+
+if [ "$release" != "trusty" ] &&
+   [ "$release" != "xenial" ] &&
+   [ "$release" != "trusty" ] &&
+   [ "$release" != "bionic" ] &&
+   [ "$release" != "cosmic" ] &&
+   [ "$release" != "disco" ]; then
+   echo "WARNING: This script has been designed to work with Ubuntu 14.04+"
+
+   # Ensure sudo and killall exist
+   apt-get install -y sudo psmisc
+
+   # Use generic release
+   release=""
+else
+  # Use specific Ubuntu release
+   release="-$release"   
+fi
 # Script Variables
 _host=$( cat /etc/hostname )
 _version="0.12.6.1"
 _folder="stashcore-${_version}-x86_64-linux-gnu"
-_binaries="${_folder}.tar.gz"
+_binaries="${_folder}${release}.tar.gz"
 _gitUser="stashpayio"
 _binaryPath="https://github.com/${_gitUser}/stash/releases/download/v${_version}/${_binaries}"
 _sentinelPath="https://github.com/stashpayio/sentinel.git"
@@ -59,20 +84,6 @@ cat <<EOF
 ********************************************************************************
 
 EOF
-
-if [ "$(whoami)" != "root" ]; then
-  echo "Script should be run as user: root"
-  exit 1
-fi
-
-# Check OS Version is Ubuntu 18.04
-. /etc/lsb-release
-
-if [ "$DISTRIB_RELEASE" != "18.04" ] &&
-   [ "$DISTRIB_RELEASE" != "18.10" ]; then
-  echo "WARNING: This script has been designed to work with Ubuntu 18.04"
-  exit 1 # Comment out to ignore warning
-fi
 
 # Initialise command line arguments
 for i in "$@"; do
