@@ -68,9 +68,9 @@ re='^[0-9]+$'
 if [[ $_sshd_input =~ $re ]]; then
   # is number
   if [ $_sshd_input -le 65535 ] && [ $_sshd_input -gt 0 ]; then
-    _sshport=$_sshd_input
+    _sshPort=$_sshd_input
   else
-    _sshport="22"
+    _sshPort="22"
   fi
 fi
 
