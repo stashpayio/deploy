@@ -63,11 +63,15 @@ _litemode="0"
 _debug="0"
 
 # Read SSH port from config file, otherwise default 22
-sshd_input=$(sudo cat /etc/ssh/sshd_config | awk '/^Port/ {print $2}')
-if [ $_sshd_input -le 65535 ] && [ $_sshd_input -gt 0 ]; then
-  _sshport=$_sshd_input
-else
-  _sshport="22"
+_sshd_input=$(sudo cat /etc/ssh/sshd_config | awk '/^Port/ {print $2}')
+re='^[0-9]+$'
+if [[ $_sshd_input =~ $re ]]; then
+  # is number
+  if [ $_sshd_input -le 65535 ] && [ $_sshd_input -gt 0 ]; then
+    _sshport=$_sshd_input
+  else
+    _sshport="22"
+  fi
 fi
 
 # Network variables
