@@ -62,8 +62,16 @@ _testnet="0"
 _litemode="0"
 _debug="0"
 
+# Read SSH port from config file, otherwise default 22
+sshd_input=$(sudo cat /etc/ssh/sshd_config | awk '/^Port/ {print $2}')
+if [ $_sshd_input -le 65535 ] && [ $_sshd_input -gt 0 ]; then
+  -sshport=$_sshd_input
+else
+  _sshport="22"
+fi
+
 # Network variables
-_sshPort="22"
+#_sshPort="22"
 _port="9999"
 _rpcPort="9998"
 _testPort="19999"
@@ -181,13 +189,22 @@ totalswp=$(free -m | awk '/^Swap:/{print $2}')
 totalm=$(($totalmem + $totalswp))
 if [ $totalm -lt 4000 ]; then
   echo "Server memory is less then 4GB..."
-  if ! grep -q '/swapfile' /etc/fstab ; then
+  # check if we run in a container
+  if ! grep -q '/swapfile' /etc/fstab && ! [ -f /.dockerenv ] && [ -z "$(cat /proc/1/environ | grep lxc)" ]; then 
     echo "Creating a 4GB swapfile..."
     fallocate -l 4G /swapfile
     chmod 600 /swapfile
     mkswap /swapfile
     swapon /swapfile
-    echo '/swapfile none swap sw 0 0' >> /etc/fstab
+    if [ -z "$(swapon | grep '/swapfile')" ]; then
+      echo "Swapfile activation failed, cleaning up"
+      swapoff /swapfile
+      rm -f /swapfile
+    else
+      echo '/swapfile none swap sw 0 0' >> /etc/fstab
+    fi
+  else
+    echo "Swapfile not possible, because we're running inside a container."
   fi
 fi
 
@@ -198,7 +215,7 @@ _rpcUserName=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 12 ; echo '')
 _rpcPassword=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32 ; echo '')
 
 # Get the IP address of your vps which will be hosting the masternode
-_nodeIpAddress=$(curl -s 4.icanhazip.com)
+_nodeIpAddress=$(wget -qO- 4.icanhazip.com)
 
 # Change the SSH port
 sed -i "s/[#]\{0,1\}[ ]\{0,1\}Port [0-9]\{2,\}/Port ${_sshPort}/g" /etc/ssh/sshd_config
@@ -321,6 +338,9 @@ if [ "$_masternode" == "1" ]; then
     sed -i 's/network=mainnet/#network=mainnet/g' sentinel.conf
     sed -i 's/#network=testnet/network=testnet/g' sentinel.conf
   fi
+
+  # Long sleep to avoid script aborting at wallet loading
+  sleep 20
 
   # Get a new privatekey
   _nodePrivateKey=$( ${_startCli} masternode genkey )
