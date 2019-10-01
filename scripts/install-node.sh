@@ -326,8 +326,8 @@ systemctl enable stashd
 if [ "$_masternode" == "1" ]; then
 
   # Install sentinel
-  sudo apt-get install -y git python-virtualenv
-  sudo apt-get install -y virtualenv
+  apt-get install -y git python-virtualenv
+  apt-get install -y virtualenv
   pushd ${_configPath}
   git clone ${_sentinelPath}
   pushd sentinel
