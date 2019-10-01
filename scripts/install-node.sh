@@ -63,7 +63,7 @@ _litemode="0"
 _debug="0"
 
 # Read SSH port from config file, otherwise default 22
-_sshd_input=$(sudo cat /etc/ssh/sshd_config | awk '/^Port/ {print $2}')
+_sshd_input=$(cat /etc/ssh/sshd_config | awk '/^Port/ {print $2}')
 re='^[0-9]+$'
 if [[ $_sshd_input =~ $re ]]; then
   # is number
