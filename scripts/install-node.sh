@@ -72,6 +72,8 @@ if [[ $_sshd_input =~ $re ]]; then
   else
     _sshPort="22"
   fi
+else
+    _sshPort="22"
 fi
 
 # Network variables
