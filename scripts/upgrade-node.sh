@@ -11,39 +11,17 @@
 #./install.sh masternode
 #./install.sh masternode testnet
 set -ex
-_version="0.12.6.2"
+_version="0.12.7.0"
+_rc='-rc1'
 _gitUser="stashpayio"
-_name="stashcore-${_version}-x86_64-linux-gnu"
+
+_name="stashcore-${_version}${_rc}-x86_64-linux-gnu"
+_folder="stashcore-${_version}-x86_64-linux-gnu"
 _path=~/deploy/bin
 _bin="${_name}.tar.gz"
 _daemon="stashd"
 _binaries=${_path}/${_bin}
-_binaryPath="https://github.com/${_gitUser}/stash/releases/download/v${_version}/${_bin}"
-
-# Check OS Version is Ubuntu
-release=$( lsb_release -cs ) || true
-
-if [ "$release" != "trusty" ] &&
-   [ "$release" != "xenial" ] &&
-   [ "$release" != "trusty" ] &&
-   [ "$release" != "bionic" ] &&
-   [ "$release" != "cosmic" ] &&
-   [ "$release" != "disco" ]; then  
-   # Use generic release
-   release=""
-else
-  # Use specific Ubuntu release
-   release="-$release"   
-fi
-
-# Script Variables
-_version="0.12.6.2"
-_folder="stashcore-${_version}-x86_64-linux-gnu"
-_binaries="${_folder}${release}.tar.gz"
-_gitUser="stashpayio"
-_binaryPath="https://github.com/${_gitUser}/stash/releases/download/v${_version}/${_binaries}"
-_sentinelPath="https://github.com/stashpayio/sentinel.git"
-_parametersPath="https://raw.githubusercontent.com/${_gitUser}/stash/master/zcutil/fetch-params.sh"
+_binaryPath="https://github.com/${_gitUser}/stash/releases/download/v${_version}${_rc}/${_bin}"
 
 # download lastest binaries
 echo "Checking for updates..."
@@ -51,7 +29,7 @@ mkdir -p ${_path} && pushd ${_path}
 #rm ${_bin}
 wget ${_binaryPath} -NP ${_path}
 tar xzf ${_binaries}
-pushd ${_name}/bin
+pushd ${_folder}/bin
 shaExisting=$( sha256sum /usr/bin/${_daemon} | awk '{print $1;}' )
 shaUpgrade=$( sha256sum ${_daemon} | awk '{print $1;}' )
 
