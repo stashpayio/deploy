@@ -55,13 +55,12 @@ echo "Existing version: $shaExisting"
 echo "Upgrade version: $shaUpgrade"
 
 if [ "$shaUpgrade" != "$shaExisting" ]; then 
-  echo "New version found. Stopping daemon..."
-  systemctl stop ${_daemon}.service && sleep 10
+  echo "New version found. Stopping daemon...please wait for 30 seconds"
+  systemctl stop ${_daemon}.service && sleep 30
   cp stash* /usr/bin
   echo "Restarting daemon..."
   systemctl restart ${_daemon}.service
+  echo "SUpgrade complete."
 else
   echo "No new version found."
 fi
-
-echo "Done."
