@@ -60,7 +60,7 @@ if [ "$shaUpgrade" != "$shaExisting" ]; then
   cp stash* /usr/bin
   echo "Restarting daemon..."
   systemctl restart ${_daemon}.service
-  echo "SUpgrade complete."
+  echo "Upgrade complete."
 else
   echo "No new version found."
 fi
