@@ -10,7 +10,7 @@
 #./install.sh testnet
 #./install.sh masternode
 #./install.sh masternode testnet
-set -ex
+set -e
 _version="0.12.7.0"
 _rc='-rc1'
 _gitUser="stashpayio"
@@ -22,6 +22,24 @@ _bin="${_name}.tar.gz"
 _daemon="stashd"
 _binaries=${_path}/${_bin}
 _binaryPath="https://github.com/${_gitUser}/stash/releases/download/v${_version}${_rc}/${_bin}"
+
+
+cat <<EOF
+
+********************************************************************************
+*                            Stash Core Installer v0.1                         *
+********************************************************************************
+
+This script will upgrade to Stash Core ${_version}${_rc}
+
+EOF
+
+printf  "Continue with upgrade? (y/n) "
+
+read -t 60 REPLY
+if [ ${REPLY} != "y" ]; then
+  exit 1
+fi
 
 # download lastest binaries
 echo "Checking for updates..."
