@@ -32,7 +32,7 @@ _rpcPassword=$( cat $_configFile | grep rpcpassword | sed "s/rpcpassword=//g" )
 
 cat <<EOF
 Stash insight explorer will be installed configured as follows:
-Testnet:    ${_testnet}"
+Testnet:    ${_testnet}
 Port:       ${_port}
 RPC port:   ${_rpcPort}
 EOF
