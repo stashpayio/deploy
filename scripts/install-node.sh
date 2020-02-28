@@ -260,9 +260,17 @@ server=1
 daemon=1
 logtimestamps=1
 maxconnections=64
-txindex=1
 testnet=${_testnet}
 litemode=${_litemode}
+whitelist=127.0.0.1/0
+txindex=1
+addressindex=1
+timestampindex=1
+spentindex=1
+zmqpubrawtx=tcp://127.0.0.1:28332
+zmqpubrawtxlock=tcp://127.0.0.1:28332
+zmqpubhashblock=tcp://127.0.0.1:28332
+rpcallowip=127.0.0.1/0
 debug=${_debug}" > ${_configFile}
 
 # Install stashd as a systemd service
