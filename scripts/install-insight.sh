@@ -50,6 +50,8 @@ ufw allow ${_insightPort}/tcp # insight
 
 echo "uacomment=bitcore" >> ${_configFile}
 
+mkdir -p $HOME/.stashcore/
+
 # Install insight config
 cat <<EOF > ${_configFileInsight}
 {
