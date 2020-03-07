@@ -12,7 +12,7 @@
 #./install.sh masternode testnet
 set -e
 _version="0.12.7.0"
-_rc='-rc1'
+_rc=''
 _gitUser="stashpayio"
 
 _name="stashcore-${_version}${_rc}-x86_64-linux-gnu"
