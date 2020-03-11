@@ -48,7 +48,7 @@ else
 fi
 # Script Variables
 _host=$( cat /etc/hostname )
-_version="0.12.6.2"
+_version="0.12.7.0"
 _folder="stashcore-${_version}-x86_64-linux-gnu"
 _binaries="${_folder}${release}.tar.gz"
 _gitUser="stashpayio"
