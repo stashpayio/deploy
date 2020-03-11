@@ -31,11 +31,9 @@ release=$( lsb_release -cs ) || true
 
 if [ "$release" != "trusty" ] &&
    [ "$release" != "xenial" ] &&
-   [ "$release" != "trusty" ] &&
    [ "$release" != "bionic" ] &&
-   [ "$release" != "cosmic" ] &&
-   [ "$release" != "disco" ]; then
-   echo "WARNING: This script has been designed to work with Ubuntu 14.04+"
+   [ "$release" != "eoan" ]; then
+   echo "WARNING: This script has been designed to work with Ubuntu 14.04 (Trusty), Ubuntu 16.04 (Xenial), Ubuntu 19.10 (Eoan)"
 
    # Ensure sudo and killall exist
    apt-get install -y sudo psmisc
@@ -44,7 +42,7 @@ if [ "$release" != "trusty" ] &&
    release=""
 else
   # Use specific Ubuntu release
-   release="-$release"   
+   release="-$release"
 fi
 # Script Variables
 _host=$( cat /etc/hostname )
