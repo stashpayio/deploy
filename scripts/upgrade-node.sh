@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
-# Install Stashcore node on Ubuntu 18.04 LTS x64
+# Upgrade Stashcore node on Ubuntu 18.04 LTS x64
 
 # Usage
-# ./install.sh [masternode] [testnet] [debug]
+# ./upgrade-node.sh [masternode] [testnet] [debug]
 
 # Examples
 
-#./install.sh
-#./install.sh testnet
-#./install.sh masternode
-#./install.sh masternode testnet
+#./upgrade.sh
 set -e
 _version="0.12.7.0"
 _rc=''
@@ -23,11 +20,15 @@ _daemon="stashd"
 _binaries=${_path}/${_bin}
 _binaryPath="https://github.com/${_gitUser}/stash/releases/download/v${_version}${_rc}/${_bin}"
 
+if ! [ $(id -u) = 0 ]; then
+   echo "Script must be run as root / sudo."
+   exit 1
+fi
 
 cat <<EOF
 
 ********************************************************************************
-*                            Stash Core Installer v0.1                         *
+*                            Stash Core Upgrader v0.1                         *
 ********************************************************************************
 
 This script will upgrade to Stash Core ${_version}${_rc}
