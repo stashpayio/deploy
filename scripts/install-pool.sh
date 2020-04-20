@@ -178,8 +178,8 @@ if ! crontab -l | grep "PATH=/root/.nvm/versions/node/v10.12.0/bin:$PATH"; then
   (crontab -l; echo "PATH=/root/.nvm/versions/node/v10.12.0/bin:$PATH") | crontab -
 fi
 
-if ! crontab -l | grep "@reboot sleep 20 && /root/.nvm/versions/node/v10.12.0/bin/forever start ${poolConf}"; then
-  (crontab -l; echo "@reboot sleep 20 && /root/.nvm/versions/node/v10.12.0/bin/forever start ${poolConf}") | crontab -
+if ! crontab -l | grep "@reboot sleep 60 && /root/.nvm/versions/node/v10.12.0/bin/forever start ${poolConf}"; then
+  (crontab -l; echo "@reboot sleep 60 && /root/.nvm/versions/node/v10.12.0/bin/forever start ${poolConf}") | crontab -
 fi
 
 ufw allow ${_poolPort1}/tcp
