@@ -153,7 +153,7 @@ if [ -d ${_configPath} ]; then
     exit 1
   fi
 
-  if pgrep "${_daemon}" > /dev/null
+  if [ -n "$(pidof ${_daemon})" ];
   then
     echo "Stopping ${_daemon}..."
     killall ${_daemon} > /dev/null
